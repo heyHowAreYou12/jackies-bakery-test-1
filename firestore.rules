@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && 
+             request.auth.token.email_verified == true && (
+               request.auth.token.email == 'prokic.nico@gmail.com' || 
+               request.auth.token.email == 'beispiel_email@gmail.com' ||
+               request.auth.token.email == 'email@gmail.com'
+             );
+    }
+
+    function isValidMenuItem(data) {
+      let mandatoryKeys = data.keys().hasAll(['name', 'price', 'category']);
+      let types = data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+                  data.price is number && data.price >= 0 &&
+                  data.category is string && data.category.size() > 0;
+      
+      let optionalImageUrl = !data.keys().contains('imageUrl') || (data.imageUrl is string && data.imageUrl.size() <= 1000);
+      let optionalOrder = !data.keys().contains('order') || data.order is number;
+
+      return mandatoryKeys && types && optionalImageUrl && optionalOrder;
+    }
+
+    function isValidSettings(data) {
+      return data.keys().hasAll(['cakeOfTheDay']) &&
+             data.cakeOfTheDay is string && data.cakeOfTheDay.size() <= 200 &&
+             (!data.keys().contains('updatedAt') || data.updatedAt is string);
+    }
+
+    match /menu_items/{itemId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidMenuItem(request.resource.data);
+      allow update: if isAdmin() && isValidMenuItem(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidSettings(request.resource.data);
+    }
+  }
+}
