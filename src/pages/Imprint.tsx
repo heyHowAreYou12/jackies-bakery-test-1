@@ -7,20 +7,31 @@ export default function Imprint() {
       <h1 className="text-8xl font-black uppercase tracking-tighter mb-20 italic">IMPRESSUM</h1>
       <div className="space-y-16 text-xl font-light text-white/70 serif italic">
         <section>
-          <h2 className="text-white font-black uppercase mb-6 tracking-[0.3em] text-[10px] border-b border-white/10 pb-2">Betreiberin</h2>
-          <div className="space-y-1">
-            <p className="font-bold text-white not-italic uppercase tracking-tight">Jacky</p>
-            <p>Kuchen-Hobby-Bäckerei</p>
-            <p>Musterstraße 123</p>
-            <p>1010 Wien, Österreich</p>
+          <h2 className="text-white font-black uppercase mb-6 tracking-[0.3em] text-[10px] border-b border-white/10 pb-2">Offenlegung gemäß § 25 Mediengesetz</h2>
+          <div className="space-y-4 text-sm leading-relaxed">
+            <p>
+              <span className="font-bold text-white uppercase tracking-tighter">Inhaberin & Medieninhaberin:</span><br />
+              Jacky (Nachname auf Anfrage)<br />
+              Hobby-Konditorei & Back-Passion<br />
+              Musterstraße 123, 1010 Wien, Österreich
+            </p>
+            <p>
+              <span className="font-bold text-white uppercase tracking-tighter">Unternehmensgegenstand:</span><br />
+              Hobby-Backen und Präsentation kreativer Backwaren. Es handelt sich um ein privates Projekt ohne gewerbliche Gewinnerzielungsabsicht.
+            </p>
+            <p>
+              <span className="font-bold text-white uppercase tracking-tighter">Grundlegende Richtung:</span><br />
+              Informationen über handgemachte Backwaren, Rezepte und Einblicke in das Hobby-Backen.
+            </p>
           </div>
         </section>
 
         <section>
-          <h2 className="text-white font-black uppercase mb-6 tracking-[0.3em] text-[10px] border-b border-white/10 pb-2">Kontakt</h2>
-          <div className="space-y-1">
+          <h2 className="text-white font-black uppercase mb-6 tracking-[0.3em] text-[10px] border-b border-white/10 pb-2">Informationspflichten gemäß § 5 E-Commerce-Gesetz</h2>
+          <div className="space-y-1 text-sm leading-relaxed">
             <p>Telefon: +43 676 123456</p>
-            <p>Email: beispiel_email@gmail.com</p>
+            <p>Email: prokic.nico@gmail.com</p>
+            <p>Aufsichtsbehörde: Magistrat Wien</p>
           </div>
         </section>
 
