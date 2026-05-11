@@ -213,11 +213,8 @@ export default function Admin() {
 
   return (
     <div className="max-w-4xl mx-auto py-32 px-6">
-      <div className="flex justify-between items-center mb-20 border-b border-white/10 pb-8">
-        <h1 className="text-6xl font-black uppercase tracking-tighter serif italic">BACKSTUBE <span className="text-amber-500">DASHBOARD</span></h1>
-        <div className="flex gap-4">
-          <button onClick={logout} className="p-4 hover:text-amber-500 transition-colors"><LogOut /></button>
-        </div>
+      <div className="mb-20 border-b border-white/10 pb-8">
+        <h1 className="text-6xl font-black uppercase tracking-tighter serif italic text-center md:text-left">BACKSTUBE <span className="text-amber-500">DASHBOARD</span></h1>
       </div>
 
       {/* Cake of the day */}
@@ -420,6 +417,16 @@ export default function Admin() {
           ))}
         </div>
       </section>
+
+      <div className="mt-24 pt-12 border-t border-white/10 flex justify-center">
+        <button 
+          onClick={logout} 
+          className="flex items-center gap-3 px-8 py-4 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/50 transition-all uppercase text-xs font-black tracking-[0.3em] border border-white/10 bg-white/5 group"
+        >
+          <LogOut size={18} className="group-hover:translate-x-1 transition-transform" />
+          Vom Dashboard Abmelden
+        </button>
+      </div>
     </div>
   );
 }
