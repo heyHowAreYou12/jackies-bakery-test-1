@@ -7,7 +7,10 @@ import { MenuItem, BakerySettings } from "../types";
 import { Save, Plus, Trash, LogOut, Check, X, Edit3, Star, Upload, Image as ImageIcon } from "lucide-react";
 import { motion } from "motion/react";
 
-const ADMIN_EMAILS = ["prokic.nico@gmail.com", "beispiel_email@gmail.com", "email@gmail.com"];
+const envAdminEmails = import.meta.env.VITE_ADMIN_EMAILS;
+const ADMIN_EMAILS = envAdminEmails 
+  ? envAdminEmails.split(",").map((e: string) => e.trim().toLowerCase())
+  : ["prokic.nico@gmail.com", "sdjacqueline@gmail.com"];
 
 export default function Admin() {
   const [user, setUser] = useState<User | null>(null);

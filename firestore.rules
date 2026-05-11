@@ -15,8 +15,7 @@ service cloud.firestore {
       return isSignedIn() && 
              request.auth.token.email_verified == true && (
                request.auth.token.email == 'prokic.nico@gmail.com' || 
-               request.auth.token.email == 'beispiel_email@gmail.com' ||
-               request.auth.token.email == 'email@gmail.com'
+               request.auth.token.email == 'sdjacqueline@gmail.com'
              );
     }
 
