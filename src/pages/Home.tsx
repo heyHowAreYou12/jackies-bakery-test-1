@@ -72,13 +72,19 @@ export default function Home() {
             </h3>
           </div>
           
-          <div className="lg:col-span-4 aspect-[3/4] overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 border border-white/10 max-w-sm mx-auto w-full">
+          <motion.div 
+            initial={{ filter: "grayscale(100%)" }}
+            whileInView={{ filter: "grayscale(0%)" }}
+            viewport={{ once: false, amount: 0.5 }}
+            transition={{ duration: 0.8 }}
+            className="lg:col-span-4 aspect-[3/4] overflow-hidden border border-white/10 max-w-sm mx-auto w-full group"
+          >
             <img 
               src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=2670&auto=format&fit=crop" 
               alt="Jacky Baking" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
             />
-          </div>
+          </motion.div>
 
           <div className="lg:col-span-4 flex flex-col justify-center space-y-6 md:space-y-8 text-base md:text-lg leading-relaxed font-light text-white/90 serif italic text-center lg:text-left items-center lg:items-start">
             <p>
@@ -103,13 +109,20 @@ export default function Home() {
           "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?q=80&w=2670&auto=format&fit=crop", // Cupcake
           "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=2574&auto=format&fit=crop"  // Chocolate cake
         ].map((img, i) => (
-          <div key={i} className="aspect-square overflow-hidden border-r last:border-0 border-white/10 group">
+          <motion.div 
+            key={i} 
+            initial={{ filter: "grayscale(100%)" }}
+            whileInView={{ filter: "grayscale(0%)" }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.8 }}
+            className="aspect-square overflow-hidden border-r last:border-0 border-white/10 group bg-black"
+          >
              <img 
               src={img} 
               alt={`Gallery ${i}`} 
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 cursor-crosshair"
+              className="w-full h-full object-cover transition-all duration-700 hover:scale-110 cursor-crosshair"
             />
-          </div>
+          </motion.div>
         ))}
       </section>
 

@@ -8,9 +8,12 @@ export default function About() {
         {/* Visual Side */}
         <div className="md:col-span-5 lg:sticky lg:top-32 space-y-8 hidden md:block">
           <motion.div 
-            initial={{ scale: 1.05, opacity: 0 }}
+            initial={{ scale: 1.05, opacity: 0, filter: "grayscale(100%)" }}
             animate={{ scale: 1, opacity: 1 }}
-            className="aspect-[3/4] bg-neutral-900 border border-white/10 relative group grayscale hover:grayscale-0 transition-all duration-1000"
+            whileInView={{ filter: "grayscale(0%)" }}
+            viewport={{ once: false, amount: 0.5 }}
+            transition={{ duration: 1 }}
+            className="aspect-[3/4] bg-neutral-900 border border-white/10 relative group"
           >
             <img 
               src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop" 
@@ -48,7 +51,13 @@ export default function About() {
               ECHT.<br />ROH.<br /><span className="text-amber-500">BACKEN.</span>
             </h1>
             
-            <div className="md:hidden aspect-[3/4] mb-12 relative group grayscale hover:grayscale-0 transition-all duration-1000 border border-white/10 mx-auto w-full max-w-xs">
+            <motion.div 
+              initial={{ filter: "grayscale(100%)" }}
+              whileInView={{ filter: "grayscale(0%)" }}
+              viewport={{ once: false, amount: 0.5 }}
+              transition={{ duration: 1 }}
+              className="md:hidden aspect-[3/4] mb-12 relative group border border-white/10 mx-auto w-full max-w-xs"
+            >
                <img 
                 src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop" 
                 alt="Jacky" 
@@ -57,7 +66,7 @@ export default function About() {
               <div className="absolute bottom-6 left-6 text-left">
                 <p className="text-4xl sm:text-5xl font-black uppercase tracking-tighter italic leading-none">JACKY</p>
               </div>
-            </div>
+            </motion.div>
 
             <div className="space-y-6 md:space-y-8 text-lg md:text-2xl text-white/90 leading-relaxed font-light serif italic max-w-2xl mx-auto md:mx-0">
               <p>

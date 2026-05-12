@@ -34,11 +34,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`hover:text-amber-500 transition-colors ${
-                  location.pathname === item.path ? "text-amber-500" : "text-white/80"
+                className={`transition-all duration-300 relative group ${
+                  location.pathname === item.path ? "text-amber-500" : "text-white/80 hover:text-white"
                 }`}
               >
-                {item.name}
+                <motion.span
+                  whileTap={{ scale: 0.95 }}
+                  className="block"
+                >
+                  {item.name}
+                </motion.span>
+                <span className={`absolute -bottom-1 left-0 w-full h-[1px] bg-amber-500 transition-transform duration-300 origin-left ${
+                  location.pathname === item.path ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                }`}></span>
               </Link>
             ))}
           </div>
@@ -110,15 +118,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </p>
           </div>
           
-          <div className="flex flex-col gap-4 items-center md:items-start">
+          <div className="flex flex-col gap-4 items-center md:items-start text-xs">
             <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold text-amber-500 mb-2">Legal</h4>
             {footerItems.map((item) => (
               <Link 
                 key={item.path} 
                 to={item.path} 
-                className="text-[10px] uppercase tracking-widest font-bold text-white/80 hover:text-amber-500 transition-colors"
+                className="text-[10px] uppercase tracking-widest font-bold text-white/50 hover:text-amber-500 transition-all duration-300 relative group"
               >
-                {item.name}
+                <motion.span whileTap={{ x: 5 }} className="block">
+                  {item.name}
+                </motion.span>
+                <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-amber-500 transition-all duration-300 group-hover:w-full"></span>
               </Link>
             ))}
           </div>
