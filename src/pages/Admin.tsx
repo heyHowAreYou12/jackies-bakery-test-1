@@ -43,6 +43,8 @@ export default function Admin() {
       console.error("Admin: Login Error", err);
       if (err.code === 'auth/popup-closed-by-user') {
         setLoginError("Login wurde abgebrochen.");
+      } else if (err.code === 'auth/popup-blocked') {
+        setLoginError("Popup blockiert! Bitte erlaube Popups für diese Seite oder öffne sie in einem neuen Tab.");
       } else if (err.code === 'auth/internal-error') {
         setLoginError("Interner Fehler. Bitte versuche es später erneut.");
       } else if (err.code === 'auth/unauthorized-domain') {
@@ -182,13 +184,18 @@ export default function Admin() {
         </button>
 
         {loginError && (
-          <motion.p 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-8 text-red-500 font-bold uppercase text-[10px] tracking-widest bg-red-500/10 px-4 py-2 border border-red-500/20"
-          >
-            {loginError}
-          </motion.p>
+          <div className="flex flex-col items-center">
+            <motion.p 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-8 text-red-500 font-bold uppercase text-[10px] tracking-widest bg-red-500/10 px-4 py-2 border border-red-500/20 text-center"
+            >
+              {loginError}
+            </motion.p>
+            <p className="mt-4 text-white/40 text-[10px] uppercase tracking-widest text-center max-w-xs">
+              Tipp: Falls das Problem weiterhin besteht, öffne die Seite <a href={window.location.href} target="_blank" rel="noopener noreferrer" className="text-amber-500 underline">hier in einem neuen Tab</a>.
+            </p>
+          </div>
         )}
 
         {user && !isAdmin && (
@@ -214,7 +221,7 @@ export default function Admin() {
   return (
     <div className="max-w-4xl mx-auto py-32 px-6">
       <div className="mb-20 border-b border-white/10 pb-8">
-        <h1 className="text-6xl font-black uppercase tracking-tighter serif italic text-center md:text-left">BACKSTUBE <span className="text-amber-500">DASHBOARD</span></h1>
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tighter serif italic text-center md:text-left break-words">BACKSTUBE <span className="text-amber-500">DASHBOARD</span></h1>
       </div>
 
       {/* Cake of the day */}
@@ -388,14 +395,14 @@ export default function Admin() {
                         <img src={item.imageUrl} className="w-full h-full object-cover" />
                       </div>
                     )}
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[9px] uppercase tracking-widest font-black text-amber-500/60 font-sans">{item.category}</span>
-                      <div className="flex gap-4 items-center">
-                        <span className="text-2xl font-black uppercase serif italic">{item.name}</span>
-                        <span className="text-white/20">—</span>
-                        <span className="font-bold text-amber-500 text-xl serif italic">{item.price} €</span>
-                      </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] uppercase tracking-widest font-black text-amber-500/60 font-sans">{item.category}</span>
+                    <div className="flex flex-col sm:flex-row sm:gap-4 sm:items-center">
+                      <span className="text-xl sm:text-2xl font-black uppercase serif italic break-words">{item.name}</span>
+                      <span className="hidden sm:inline text-white/20">—</span>
+                      <span className="font-bold text-amber-500 text-lg sm:text-xl serif italic">{item.price} €</span>
                     </div>
+                  </div>
                   </div>
                   <div className="flex gap-4 mt-6 md:mt-0">
                     <button 

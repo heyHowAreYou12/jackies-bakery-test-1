@@ -32,8 +32,8 @@ export default function Prices() {
         className="mb-20 md:mb-32 text-center md:text-left"
       >
         <h2 className="text-xs uppercase tracking-[0.4em] mb-4 font-bold text-amber-500">Selection / Preise</h2>
-        <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-8 italic leading-none">THE PRICE<br />OF PASSION</h1>
-        <p className="text-lg serif italic opacity-60 max-w-sm mx-auto md:mx-0">
+        <h1 className="text-5xl sm:text-6xl md:text-8xl font-black uppercase tracking-tighter mb-8 italic leading-none break-words">THE PRICE<br />OF PASSION</h1>
+        <p className="text-lg serif italic text-white/90 max-w-sm mx-auto md:mx-0">
           Ehrliches Handwerk. Faire Preise. Kein Schnickschnack. Qualität über Quantität.
         </p>
       </motion.div>
@@ -44,7 +44,7 @@ export default function Prices() {
         </div>
       ) : items.length === 0 ? (
         <div className="text-center py-40 border border-dashed border-white/10 flex flex-col items-center justify-center gap-6">
-          <p className="text-white/40 uppercase font-black tracking-[0.3em] text-xs">Die Backstube wird gerade vorbereitet.</p>
+          <p className="text-white/80 uppercase font-black tracking-[0.3em] text-xs">Die Backstube wird gerade vorbereitet.</p>
           <Link to="/admin" className="text-[10px] bg-white text-black px-6 py-2 font-black uppercase tracking-widest hover:bg-amber-500 transition-all">
             Katalog befüllen
           </Link>
@@ -53,7 +53,7 @@ export default function Prices() {
         <div className="grid md:grid-cols-2 gap-x-20 gap-y-32">
           {categories.map(category => (
             <div key={category} className="space-y-8">
-              <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 border-b border-white/10 pb-4">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500 border-b border-white/10 pb-4">
                 {category}
               </h2>
               <ul className="space-y-12">
@@ -64,11 +64,11 @@ export default function Prices() {
                         <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
                       </div>
                     )}
-                    <div className="flex-1 flex justify-between items-baseline">
-                      <span className="text-3xl font-black uppercase tracking-tighter group-hover:text-amber-500 transition-colors italic">
-                        {item.name}
-                      </span>
-                      <span className="font-mono text-xl text-amber-500/80">
+                      <div className="flex-1 flex justify-between items-baseline gap-4">
+                        <span className="text-2xl md:text-3xl font-black uppercase tracking-tighter group-hover:text-amber-500 transition-colors italic break-words">
+                          {item.name}
+                        </span>
+                      <span className="font-mono text-xl text-amber-500">
                         {item.price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}
                       </span>
                     </div>
@@ -81,13 +81,14 @@ export default function Prices() {
       )}
 
 
-      <div className="mt-32 p-12 bg-white text-black text-center skew-x-[-2deg]">
-        <h3 className="text-4xl font-black uppercase mb-4 tracking-tighter">Sonderwünsche?</h3>
-        <p className="text-lg font-bold uppercase tracking-widest mb-8">
+      <div className="mt-32 p-6 sm:p-12 bg-white text-black text-center md:skew-x-[-2deg]">
+        <h3 className="text-2xl sm:text-4xl font-black uppercase mb-4 tracking-tighter break-words leading-none">Sonderwünsche?</h3>
+        <p className="text-sm sm:text-lg font-bold uppercase tracking-widest mb-8 opacity-90">
           Ich backe auch individuell für deine Events, Partys oder einfach nur für dich.
         </p>
-        <div className="text-xl font-black">
-          Frag einfach nach: +43 676 123456
+        <div className="text-base sm:text-xl font-black tabular-nums">
+          <span className="block sm:inline opacity-70 font-bold text-xs uppercase tracking-widest mb-2 sm:mb-0 sm:mr-4">Frag einfach nach:</span>
+          +43 676 123456
         </div>
       </div>
     </div>

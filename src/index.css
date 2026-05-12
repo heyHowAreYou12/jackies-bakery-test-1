@@ -6,3 +6,9 @@
   --font-serif: "Fraunces", serif;
 }
 
+@layer base {
+  body {
+    @apply bg-[#0a0a0a] text-[#f4f4f4] antialiased overflow-x-hidden;
+  }
+}
+

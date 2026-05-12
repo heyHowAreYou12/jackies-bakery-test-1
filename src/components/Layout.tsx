@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#f4f4f4] font-sans selection:bg-amber-600 selection:text-black">
+    <div className="flex flex-col min-h-screen">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/10 uppercase font-bold tracking-[0.2em] text-[10px]">
         <div className="max-w-7xl mx-auto px-10 h-20 flex items-center justify-between">
@@ -35,7 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 key={item.path}
                 to={item.path}
                 className={`hover:text-amber-500 transition-colors ${
-                  location.pathname === item.path ? "text-amber-500" : "text-white/60"
+                  location.pathname === item.path ? "text-amber-500" : "text-white/80"
                 }`}
               >
                 {item.name}
@@ -75,7 +75,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Link
             to="/admin"
             onClick={() => setIsMenuOpen(false)}
-            className="text-xl font-bold uppercase tracking-widest text-white/40 hover:text-amber-500 transition-colors mt-8"
+            className="text-xl font-bold uppercase tracking-widest text-white/70 hover:text-amber-500 transition-colors mt-8"
           >
             Admin Login
           </Link>
@@ -105,18 +105,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left">
           <div className="max-w-sm flex flex-col items-center md:items-start">
             <h3 className="font-black uppercase text-xs tracking-widest text-amber-500 mb-4">Sweet Buns Club</h3>
-            <p className="text-white/40 text-sm leading-relaxed serif italic">
+            <p className="text-white/70 text-sm leading-relaxed serif italic">
               Keine Prinzessinnen-Torten, sondern echtes Handwerk mit Charakter. Jacky's Bakery ist für alle, die das Leben intensiv lieben.
             </p>
           </div>
           
           <div className="flex flex-col gap-4 items-center md:items-start">
-            <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/20 mb-2">Legal</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold text-amber-500 mb-2">Legal</h4>
             {footerItems.map((item) => (
               <Link 
                 key={item.path} 
                 to={item.path} 
-                className="text-[10px] uppercase tracking-widest font-bold text-white/60 hover:text-amber-500 transition-colors"
+                className="text-[10px] uppercase tracking-widest font-bold text-white/80 hover:text-amber-500 transition-colors"
               >
                 {item.name}
               </Link>
@@ -124,13 +124,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex flex-col gap-4 items-center md:items-start">
-            <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/20 mb-2">Social</h4>
-            <a href="#" className="flex items-center gap-3 text-[10px] uppercase tracking-widest font-bold text-white/60 hover:text-amber-500 transition-colors">
+            <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold text-amber-500 mb-2">Social</h4>
+            <a href="#" className="flex items-center gap-3 text-[10px] uppercase tracking-widest font-bold text-white/80 hover:text-amber-500 transition-colors">
               <Instagram size={14} /> Instagram
             </a>
           </div>
         </div>
-        <div className="text-center mt-24 opacity-20 text-[9px] uppercase tracking-[0.4em]">
+        <div className="text-center mt-24 opacity-40 text-[9px] uppercase tracking-[0.4em]">
           &copy; {new Date().getFullYear()} Jacky's Bakery Vienna. Built for the wild ones.
         </div>
       </footer>
