@@ -1,26 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Wrapper (Brown) -->
-  <path d="M25,60 L75,60 L68,90 L32,90 Z" fill="#4B2C20" />
+  <!-- Wrapper (Tan/Light Brown) -->
+  <path d="M22,55 L78,55 L70,92 L30,92 Z" fill="#D97706" />
   <!-- Vertical lines on wrapper -->
-  <path d="M35,62 L38,88 M45,62 L46,88 M55,62 L54,88 M65,62 L62,88" stroke="#3D1F16" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M35,57 L38,88 M50,57 L50,88 M65,57 L62,88" stroke="#B45309" stroke-width="2" stroke-linecap="round" />
   
-  <!-- Frosting (Dark Chocolate) -->
-  <!-- Base layer -->
-  <path d="M18,62 Q18,48 30,42 Q30,30 50,30 Q70,30 70,42 Q82,48 82,62 Z" fill="#2d1a12" />
-  <!-- Middle swirl -->
-  <path d="M32,45 Q32,35 50,35 Q68,35 68,45 Z" fill="#3D1F16" />
-  <!-- Top swirl -->
-  <path d="M42,38 Q42,22 50,22 Q58,22 58,38 Z" fill="#1a0f0a" />
+  <!-- Muffin Top (Golden Brown) -->
+  <path d="M10,55 Q10,25 50,25 Q90,25 90,55 Q90,65 75,65 L25,65 Q10,65 10,55 Z" fill="#F59E0B" />
+  
+  <!-- Highlights on Top -->
+  <path d="M35,35 Q40,30 50,30" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6" />
 
-  <!-- Sprinkles (Golden Yellow) -->
-  <circle cx="45" cy="38" r="2.5" fill="#EAB308" />
-  <circle cx="55" cy="45" r="2" fill="#EAB308" />
-  <circle cx="35" cy="52" r="2.2" fill="#EAB308" />
-  <circle cx="65" cy="52" r="2.2" fill="#EAB308" />
-  <circle cx="50" cy="58" r="2" fill="#EAB308" />
-  <circle cx="40" cy="28" r="1.8" fill="#EAB308" />
-  <circle cx="60" cy="28" r="1.8" fill="#EAB308" />
-  <circle cx="50" cy="24" r="1.5" fill="#EAB308" />
-  <circle cx="30" cy="58" r="1.5" fill="#EAB308" />
-  <circle cx="70" cy="58" r="1.5" fill="#EAB308" />
+  <!-- Chocolate Chips (Dark Brown) -->
+  <circle cx="30" cy="40" r="3" fill="#451A03" />
+  <circle cx="50" cy="35" r="3.5" fill="#451A03" />
+  <circle cx="70" cy="40" r="3" fill="#451A03" />
+  <circle cx="20" cy="50" r="2.5" fill="#451A03" />
+  <circle cx="40" cy="50" r="3" fill="#451A03" />
+  <circle cx="60" cy="48" r="3" fill="#451A03" />
+  <circle cx="80" cy="50" r="2.5" fill="#451A03" />
 </svg>
