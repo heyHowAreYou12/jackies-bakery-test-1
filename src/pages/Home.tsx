@@ -151,15 +151,6 @@ export default function Home() {
                   >
                     +43 676 123456
                   </a>
-                  <button 
-                    onClick={() => {
-                      navigator.clipboard.writeText("+43676123456");
-                      alert("Telefonnummer kopiert!");
-                    }}
-                    className="text-[10px] uppercase font-bold opacity-0 group-hover:opacity-50 hover:opacity-100 transition-opacity bg-white/10 px-2 py-1 rounded"
-                  >
-                    Kopieren
-                  </button>
                 </div>
               </div>
               
@@ -172,15 +163,6 @@ export default function Home() {
                   >
                     beispiel@gmail.com
                   </a>
-                  <button 
-                    onClick={() => {
-                      navigator.clipboard.writeText("beispiel@gmail.com");
-                      alert("Email-Adresse kopiert!");
-                    }}
-                    className="text-[10px] uppercase font-bold opacity-40 hover:opacity-100 transition-opacity bg-white/10 px-3 py-1 rounded mt-2"
-                  >
-                    Adresse kopieren (Fallback)
-                  </button>
                 </div>
               </div>
             </div>

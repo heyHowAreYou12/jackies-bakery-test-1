@@ -44,11 +44,9 @@ export default function Imprint() {
           <div className="space-y-2 text-sm leading-relaxed text-white/80">
             <p className="flex items-center gap-4">
               <span>Telefon: <a href="tel:+43676123456" className="hover:text-amber-500 transition-colors">+43 676 123456</a></span>
-              <button onClick={() => { navigator.clipboard.writeText("+43676123456"); alert("Kopiert!"); }} className="text-[9px] uppercase border border-white/10 px-2 py-0.5 rounded hover:bg-white/5 transition-colors">Kopieren</button>
             </p>
             <p className="flex items-center gap-4">
               <span>Email: <a href="mailto:beispiel@gmail.com" className="hover:text-amber-500 transition-colors">beispiel@gmail.com</a></span>
-              <button onClick={() => { navigator.clipboard.writeText("beispiel@gmail.com"); alert("Kopiert!"); }} className="text-[9px] uppercase border border-white/10 px-2 py-0.5 rounded hover:bg-white/5 transition-colors">Kopieren</button>
             </p>
             <p>Aufsichtsbehörde: Magistrat Wien</p>
           </div>

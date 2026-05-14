@@ -96,12 +96,6 @@ export default function Prices() {
               <a href="tel:+43676123456" className="hover:text-amber-600 transition-colors">
                 +43 676 123456
               </a>
-              <button 
-                onClick={() => { navigator.clipboard.writeText("+43676123456"); alert("Kopiert!"); }}
-                className="text-[8px] uppercase tracking-widest opacity-0 group-hover:opacity-50 transition-opacity"
-              >
-                [Kopieren]
-              </button>
             </div>
           </div>
           <div className="text-base sm:text-xl font-black tabular-nums group">
@@ -110,12 +104,6 @@ export default function Prices() {
               <a href="mailto:beispiel@gmail.com" className="hover:text-amber-600 transition-colors">
                 beispiel@gmail.com
               </a>
-              <button 
-                onClick={() => { navigator.clipboard.writeText("beispiel@gmail.com"); alert("Kopiert!"); }}
-                className="text-[8px] uppercase tracking-widest opacity-0 group-hover:opacity-50 transition-opacity"
-              >
-                [Kopieren]
-              </button>
             </div>
           </div>
         </div>
