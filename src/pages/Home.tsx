@@ -144,7 +144,7 @@ export default function Home() {
                 <p className="text-2xl sm:text-4xl md:text-6xl font-black group-hover:text-amber-500 transition-colors tracking-tighter tabular-nums whitespace-nowrap">+43 676 123456</p>
               </a>
               
-              <a href="mailto:beispiel@gmail.com" target="_blank" rel="noopener noreferrer" className="block group">
+              <a href="mailto:beispiel@gmail.com" className="block group">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-amber-500 mb-4 font-bold">Schreib mir</p>
                 <p className="text-xl sm:text-3xl md:text-5xl font-black group-hover:text-amber-500 transition-colors tracking-tighter whitespace-nowrap">beispiel@gmail.com</p>
               </a>

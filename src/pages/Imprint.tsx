@@ -42,7 +42,7 @@ export default function Imprint() {
           <h2 className="text-amber-500 font-black uppercase mb-6 tracking-[0.3em] text-[10px] border-b border-white/10 pb-2">Informationspflichten gemäß § 5 E-Commerce-Gesetz</h2>
           <div className="space-y-1 text-sm leading-relaxed text-white/80">
             <p>Telefon: <a href="tel:+43676123456" className="hover:text-amber-500 transition-colors">+43 676 123456</a></p>
-            <p>Email: <a href="mailto:beispiel@gmail.com" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">beispiel@gmail.com</a></p>
+            <p>Email: <a href="mailto:beispiel@gmail.com" className="hover:text-amber-500 transition-colors">beispiel@gmail.com</a></p>
             <p>Aufsichtsbehörde: Magistrat Wien</p>
           </div>
         </section>

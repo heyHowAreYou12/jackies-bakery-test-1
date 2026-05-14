@@ -95,7 +95,7 @@ export default function Prices() {
           </div>
           <div className="text-base sm:text-xl font-black tabular-nums">
             <span className="block opacity-70 font-bold text-xs uppercase tracking-widest mb-2">Email:</span>
-            <a href="mailto:beispiel@gmail.com" target="_blank" rel="noopener noreferrer" className="hover:text-amber-600 transition-colors">
+            <a href="mailto:beispiel@gmail.com" className="hover:text-amber-600 transition-colors">
               beispiel@gmail.com
             </a>
           </div>
