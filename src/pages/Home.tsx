@@ -22,8 +22,11 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       <Helmet>
-        <title>Jacky's Bakery | Authentisch. Wild. Lecker.</title>
-        <meta name="description" content="Jacky's Bakery in Wien. Handgemachte Torten, Kuchen und der Cake of the Day. Kein Kitsch, sondern echtes Handwerk mit Charakter." />
+        <title>Jacky's Bakery | Handgemachte Torten & Kuchen Wien</title>
+        <meta name="description" content="Jacky's Bakery - Authentisches Handwerk aus Wien. Entdecke handgemachte Torten, Cake of the Day und Backkunst mit Charakter. Keine Prinzessinnen-Torten, nur echter Genuss." />
+        <meta property="og:title" content="Jacky's Bakery | Handgemachte Torten & Kuchen Wien" />
+        <meta property="og:description" content="Authentisches Handwerk aus Wien. Entdecke handgemachte Torten, Cake of the Day und Backkunst mit Charakter." />
+        <meta property="og:image" content="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1200&auto=format&fit=crop" />
       </Helmet>
       
       {/* Hero Section */}
@@ -61,7 +64,7 @@ export default function Home() {
         <div className="hidden md:block md:col-span-5 relative border-l border-white/10">
           <img 
             src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=2689&auto=format&fit=crop" 
-            alt="Hero Cake" 
+            alt="Handgefertigte Schokoladentorte in der Backstube von Jacky's Bakery Wien" 
             className="w-full h-full object-cover grayscale brightness-50 contrast-125"
           />
           <div className="absolute inset-0 bg-amber-500/10 mix-blend-overlay"></div>
@@ -87,7 +90,7 @@ export default function Home() {
           >
             <img 
               src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=2670&auto=format&fit=crop" 
-              alt="Jacky Baking" 
+              alt="Bäckerin Jacky bei der Zubereitung von frischem Teig für handgemachte Torten" 
               className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
             />
           </motion.div>
@@ -110,10 +113,10 @@ export default function Home() {
       {/* Grid Gallery */}
       <section className="grid grid-cols-2 md:grid-cols-4">
         {[
-          "https://images.unsplash.com/photo-1544070078-a212eda27b49?q=80&w=2670&auto=format&fit=crop", // Muffin
-          "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=2564&auto=format&fit=crop", // Cookie
-          "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?q=80&w=2670&auto=format&fit=crop", // Cupcake
-          "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=2574&auto=format&fit=crop"  // Chocolate cake
+          { url: "https://images.unsplash.com/photo-1544070078-a212eda27b49?q=80&w=2670&auto=format&fit=crop", alt: "Frisch gebackene Muffins aus Jacky's Bakery" },
+          { url: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=2564&auto=format&fit=crop", alt: "Handgemachte Cookies mit Schokoladenstücken" },
+          { url: "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?q=80&w=2670&auto=format&fit=crop", alt: "Kunstvoll verzierte Cupcakes" },
+          { url: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=2574&auto=format&fit=crop", alt: "Saftiger Schokoladenkuchen Anschnitt" }
         ].map((img, i) => (
           <motion.div 
             key={i} 
@@ -124,8 +127,8 @@ export default function Home() {
             className="aspect-square overflow-hidden border-r last:border-0 border-white/10 group bg-black"
           >
              <img 
-              src={img} 
-              alt={`Gallery ${i}`} 
+              src={img.url} 
+              alt={img.alt} 
               className="w-full h-full object-cover transition-all duration-700 hover:scale-110 cursor-crosshair"
             />
           </motion.div>
@@ -139,15 +142,47 @@ export default function Home() {
           
           <div className="grid md:grid-cols-2 gap-16 md:gap-32 w-full">
             <div className="space-y-12">
-              <a href="tel:+43676123456" className="block group">
+              <div className="block group">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-amber-500 mb-4 font-bold">Direkt Anrufen</p>
-                <p className="text-2xl sm:text-4xl md:text-6xl font-black group-hover:text-amber-500 transition-colors tracking-tighter tabular-nums whitespace-nowrap">+43 676 123456</p>
-              </a>
+                <div className="flex items-center justify-center md:justify-start gap-4">
+                  <a 
+                    href="tel:+43676123456" 
+                    className="text-2xl sm:text-4xl md:text-6xl font-black group-hover:text-amber-500 transition-colors tracking-tighter tabular-nums whitespace-nowrap"
+                  >
+                    +43 676 123456
+                  </a>
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText("+43676123456");
+                      alert("Telefonnummer kopiert!");
+                    }}
+                    className="text-[10px] uppercase font-bold opacity-0 group-hover:opacity-50 hover:opacity-100 transition-opacity bg-white/10 px-2 py-1 rounded"
+                  >
+                    Kopieren
+                  </button>
+                </div>
+              </div>
               
-              <a href="mailto:beispiel@gmail.com" className="block group">
+              <div className="block group">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-amber-500 mb-4 font-bold">Schreib mir</p>
-                <p className="text-xl sm:text-3xl md:text-5xl font-black group-hover:text-amber-500 transition-colors tracking-tighter whitespace-nowrap">beispiel@gmail.com</p>
-              </a>
+                <div className="flex flex-col items-center md:items-start gap-2">
+                  <a 
+                    href="mailto:beispiel@gmail.com" 
+                    className="text-xl sm:text-3xl md:text-5xl font-black group-hover:text-amber-500 transition-colors tracking-tighter whitespace-nowrap"
+                  >
+                    beispiel@gmail.com
+                  </a>
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText("beispiel@gmail.com");
+                      alert("Email-Adresse kopiert!");
+                    }}
+                    className="text-[10px] uppercase font-bold opacity-40 hover:opacity-100 transition-opacity bg-white/10 px-3 py-1 rounded mt-2"
+                  >
+                    Adresse kopieren (Fallback)
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div className="flex flex-col justify-center items-center md:items-start space-y-8">

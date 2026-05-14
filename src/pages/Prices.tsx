@@ -28,8 +28,11 @@ export default function Prices() {
   return (
     <div className="max-w-5xl mx-auto py-24 md:py-32 px-6 md:px-10">
       <Helmet>
-        <title>Preise & Sortiment | The Price of Passion</title>
-        <meta name="description" content="Entdecke das Sortiment von Jacky's Bakery. Ehrliches Handwerk, faire Preise und individuelle Backwerke für dein Event." />
+        <title>Sortiment & Preise | Jacky's Bakery Wien</title>
+        <meta name="description" content="Entdecke das Sortiment von Jacky's Bakery Wien. Ehrliches Handwerk, faire Preise für Torten, Kuchen und individuelle Backwerke für dein Event oder deine Party." />
+        <meta property="og:title" content="Sortiment & Preise | Jacky's Bakery Wien" />
+        <meta property="og:description" content="Entdecke handgemachte Köstlichkeiten zu fairen Preisen. Von klassischen Torten bis hin zu individuellen Sonderwünschen." />
+        <meta property="og:image" content="https://images.unsplash.com/photo-1551024506-0bccd828d307?q=80&w=1200&auto=format&fit=crop" />
       </Helmet>
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -87,17 +90,33 @@ export default function Prices() {
           Ich backe auch individuell für deine Events, Partys oder einfach nur für dich.
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center md:items-start gap-8 sm:gap-12">
-          <div className="text-base sm:text-xl font-black tabular-nums">
+          <div className="text-base sm:text-xl font-black tabular-nums group">
             <span className="block opacity-70 font-bold text-xs uppercase tracking-widest mb-2">Telefon:</span>
-            <a href="tel:+43676123456" className="hover:text-amber-600 transition-colors">
-              +43 676 123456
-            </a>
+            <div className="flex flex-col items-center md:items-start gap-2">
+              <a href="tel:+43676123456" className="hover:text-amber-600 transition-colors">
+                +43 676 123456
+              </a>
+              <button 
+                onClick={() => { navigator.clipboard.writeText("+43676123456"); alert("Kopiert!"); }}
+                className="text-[8px] uppercase tracking-widest opacity-0 group-hover:opacity-50 transition-opacity"
+              >
+                [Kopieren]
+              </button>
+            </div>
           </div>
-          <div className="text-base sm:text-xl font-black tabular-nums">
+          <div className="text-base sm:text-xl font-black tabular-nums group">
             <span className="block opacity-70 font-bold text-xs uppercase tracking-widest mb-2">Email:</span>
-            <a href="mailto:beispiel@gmail.com" className="hover:text-amber-600 transition-colors">
-              beispiel@gmail.com
-            </a>
+            <div className="flex flex-col items-center md:items-start gap-2">
+              <a href="mailto:beispiel@gmail.com" className="hover:text-amber-600 transition-colors">
+                beispiel@gmail.com
+              </a>
+              <button 
+                onClick={() => { navigator.clipboard.writeText("beispiel@gmail.com"); alert("Kopiert!"); }}
+                className="text-[8px] uppercase tracking-widest opacity-0 group-hover:opacity-50 transition-opacity"
+              >
+                [Kopieren]
+              </button>
+            </div>
           </div>
         </div>
       </div>

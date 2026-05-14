@@ -6,8 +6,11 @@ export default function About() {
   return (
     <div className="max-w-7xl mx-auto py-24 md:py-32 px-6 md:px-10">
       <Helmet>
-        <title>Über Jacky | Echt. Roh. Backen.</title>
-        <meta name="description" content="Lerne die Geschichte hinter Jacky's Bakery kennen. Über Leidenschaft, Fokus und das Manifesto einer leidenschaftlichen Hobby-Bäckerin." />
+        <title>Über Jacky | Die Bäckerin hinter den Torten Wien</title>
+        <meta name="description" content="Lerne Jacky kennen, die leidenschaftliche Hobby-Bäckerin aus Wien. Erfahre mehr über ihre Philosophie, ihr Back-Manifesto und die Liebe zu echtem Handwerk." />
+        <meta property="og:title" content="Über Jacky | Die Bäckerin hinter den Torten Wien" />
+        <meta property="og:description" content="Lerne Jacky kennen, die leidenschaftliche Hobby-Bäckerin aus Wien. Authentisch, wild und lecker." />
+        <meta property="og:image" content="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1200&auto=format&fit=crop" />
       </Helmet>
       <div className="grid md:grid-cols-12 gap-10 lg:gap-20 items-start">
         {/* Visual Side */}
@@ -22,7 +25,7 @@ export default function About() {
           >
             <img 
               src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop" 
-              alt="Jacky Portrait" 
+              alt="Porträt von Jacky, der passionierten Bäckerin hinter Jacky's Bakery Wien" 
               className="w-full h-full object-cover brightness-75 group-hover:brightness-100 transition-all duration-1000"
             />
             <div className="absolute inset-0 bg-amber-500/10 mix-blend-overlay"></div>
@@ -65,7 +68,7 @@ export default function About() {
             >
                <img 
                 src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop" 
-                alt="Jacky" 
+                alt="Bäckerin Jacky - Authentische Backkunst in Wien" 
                 className="w-full h-full object-cover brightness-75 group-hover:brightness-100 transition-all duration-1000"
               />
               <div className="absolute bottom-6 left-6 text-left">

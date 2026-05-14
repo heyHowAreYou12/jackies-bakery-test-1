@@ -285,6 +285,7 @@ export default function Admin() {
       <Helmet>
         <title>Bakery Admin | Einstellungen</title>
         <meta name="description" content="Verwalte die Backstube und aktualisiere den Cake of the Day." />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <div className="mb-20 border-b border-white/10 pb-8">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tighter serif italic text-center md:text-left break-words">BACKSTUBE <span className="text-amber-500">DASHBOARD</span></h1>

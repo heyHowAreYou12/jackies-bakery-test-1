@@ -4,8 +4,9 @@ export default function Privacy() {
   return (
     <div className="max-w-5xl mx-auto py-24 md:py-32 px-6 md:px-10">
       <Helmet>
-        <title>Datenschutz | Jacky's Bakery</title>
-        <meta name="description" content="Informationen zum Datenschutz bei Jacky's Bakery." />
+        <title>Datenschutz | Jacky's Bakery Wien</title>
+        <meta name="description" content="Informationen zum Datenschutz und zur Verarbeitung personenbezogener Daten bei Jacky's Bakery." />
+        <meta name="robots" content="noindex, follow" />
       </Helmet>
       <h2 className="text-xs uppercase tracking-[0.4em] mb-4 font-bold text-amber-500">Privacy</h2>
       <h1 className="text-5xl sm:text-7xl md:text-8xl font-black uppercase tracking-tighter mb-12 md:mb-20 italic leading-none break-words">DATENSCHUTZ</h1>
