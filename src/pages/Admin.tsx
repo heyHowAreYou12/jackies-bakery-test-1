@@ -1,16 +1,37 @@
-import { useState, useEffect } from "react";
-import { auth, loginWithGoogle, logout, db, storage } from "../lib/firebase";
+import React, { useState, useEffect } from "react";
+import { auth, loginWithGoogle, logout, db } from "../lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { collection, onSnapshot, doc, setDoc, addDoc, deleteDoc, updateDoc, query, orderBy } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { MenuItem, BakerySettings } from "../types";
-import { Save, Plus, Trash, LogOut, Check, X, Edit3, Star, Upload, Image as ImageIcon } from "lucide-react";
+import { Save, Plus, Trash, LogOut, Check, X, Edit3, Star } from "lucide-react";
 import { motion } from "motion/react";
+import { Helmet } from "react-helmet-async";
 
 const envAdminEmails = import.meta.env.VITE_ADMIN_EMAILS;
 const ADMIN_EMAILS = envAdminEmails 
   ? envAdminEmails.split(",").map((e: string) => e.trim().toLowerCase())
   : ["prokic.nico@gmail.com", "sdjacqueline@gmail.com"];
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+  }
+}
 
 export default function Admin() {
   const [user, setUser] = useState<User | null>(null);
@@ -19,18 +40,28 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [newItem, setNewItem] = useState<Partial<MenuItem>>({ name: "", price: 0, category: "Kuchen", imageUrl: "" });
+  const [justSavedCake, setJustSavedCake] = useState(false);
+  const [justAddedItem, setJustAddedItem] = useState(false);
+  const [newItem, setNewItem] = useState<Partial<MenuItem>>({ name: "", price: 0, category: "Kuchen" });
 
-  useEffect(() => {
-    console.log("Admin: Initializing auth state listener");
-    const unsubAuth = onAuthStateChanged(auth, (u) => {
-      console.log("Admin: Auth state changed", u ? `User: ${u.email}` : "No user");
-      setUser(u);
-      setLoading(false);
-    });
-    return () => unsubAuth();
-  }, []);
+  const handleFirestoreError = (error: unknown, operationType: OperationType, path: string | null) => {
+    const errInfo: FirestoreErrorInfo = {
+      error: error instanceof Error ? error.message : String(error),
+      authInfo: {
+        userId: auth.currentUser?.uid,
+        email: auth.currentUser?.email,
+        emailVerified: auth.currentUser?.emailVerified,
+        isAnonymous: auth.currentUser?.isAnonymous,
+      },
+      operationType,
+      path
+    };
+    console.error('Firestore Error Detailed: ', JSON.stringify(errInfo, null, 2));
+    // Also show it to the user in this specific case
+    if (operationType === OperationType.WRITE || operationType === OperationType.CREATE || operationType === OperationType.DELETE || operationType === OperationType.UPDATE) {
+      alert(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
 
   const handleLogin = async () => {
     console.log("Admin: Starting login process");
@@ -58,19 +89,44 @@ export default function Admin() {
   };
 
   useEffect(() => {
+    console.log("Admin: Initializing auth state listener");
+    const unsubAuth = onAuthStateChanged(auth, (u) => {
+      console.log("Admin: Auth state changed", u ? `User: ${u.email} (Verified: ${u.emailVerified})` : "No user");
+      setUser(u);
+      setLoading(false);
+    });
+    return () => unsubAuth();
+  }, []);
+
+  useEffect(() => {
     if (!user) return;
     const email = user.email?.toLowerCase() || "";
     const isAllowed = ADMIN_EMAILS.some(e => e.toLowerCase() === email);
     
-    if (!isAllowed) return;
+    if (!isAllowed) {
+      console.warn("User logged in but not in ADMIN_EMAILS list:", email);
+      return;
+    }
 
+    console.log("Admin: Setting up listeners for allowed admin");
     const q = query(collection(db, "menu_items"), orderBy("category"));
     const unsubItems = onSnapshot(q, (snapshot) => {
-      setItems(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as MenuItem[]);
+      console.log("Admin: Items snapshot received", snapshot.size, "items");
+      const mappedItems = snapshot.docs.map(doc => {
+        const data = doc.data();
+        // Log individual items to debug IDs
+        console.log(`Doc: ${doc.id}`, data);
+        return { ...data, id: doc.id };
+      }) as MenuItem[];
+      setItems(mappedItems);
+    }, (err) => {
+      handleFirestoreError(err, OperationType.GET, "menu_items");
     });
 
     const unsubSettings = onSnapshot(doc(db, "settings", "bakery"), (d) => {
       if (d.exists()) setSettings(d.data() as BakerySettings);
+    }, (err) => {
+      handleFirestoreError(err, OperationType.GET, "settings/bakery");
     });
 
     return () => {
@@ -81,17 +137,21 @@ export default function Admin() {
 
   const handleAddItem = async () => {
     if (!newItem.name || !newItem.price || !newItem.category) return;
+    const path = "menu_items";
     try {
-      await addDoc(collection(db, "menu_items"), {
+      console.log("Admin: Adding item", newItem);
+      await addDoc(collection(db, path), {
         name: newItem.name,
         price: newItem.price,
         category: newItem.category,
-        imageUrl: newItem.imageUrl || "",
         order: items.length
       });
-      setNewItem({ name: "", price: 0, category: "Kuchen", imageUrl: "" });
+      console.log("Admin: Item added successfully (doc created)");
+      setJustAddedItem(true);
+      setTimeout(() => setJustAddedItem(false), 2000);
+      setNewItem({ name: "", price: 0, category: "Kuchen" });
     } catch (err) {
-      console.error(err);
+      handleFirestoreError(err, OperationType.CREATE, path);
     }
   };
 
@@ -110,49 +170,51 @@ export default function Admin() {
 
   const saveEdit = async () => {
     if (!editingId || !editItem.name) return;
+    const path = `menu_items/${editingId}`;
     try {
       await updateDoc(doc(db, "menu_items", editingId), {
         name: editItem.name,
         price: editItem.price,
-        category: editItem.category,
-        imageUrl: editItem.imageUrl || ""
+        category: editItem.category
       });
       setEditingId(null);
     } catch (err) {
-      console.error(err);
+      handleFirestoreError(err, OperationType.UPDATE, path);
     }
   };
 
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+
   const handleDeleteItem = async (id: string) => {
-    if (confirm("Wirklich löschen?")) {
+    console.log("Delete request received for ID:", id);
+    if (!id) {
+      console.error("No ID provided for deletion!");
+      return;
+    }
+    
+    const path = `menu_items/${id}`;
+    console.log(`Deleting document at path: ${path}`);
+    try {
       await deleteDoc(doc(db, "menu_items", id));
+      console.log("Deletion successful");
+      setItemToDelete(null);
+    } catch (err) {
+      console.error("Deletion failed:", err);
+      handleFirestoreError(err, OperationType.DELETE, path);
     }
   };
 
   const handleUpdateCakeOfDay = async (val: string) => {
-    await setDoc(doc(db, "settings", "bakery"), { 
-      cakeOfTheDay: val,
-      updatedAt: new Date().toISOString()
-    }, { merge: true });
-  };
-
-  const handleFileUpload = async (file: File, isEdit: boolean = false) => {
-    if (!file) return;
-    setIsUploading(true);
+    const path = "settings/bakery";
     try {
-      const storageRef = ref(storage, `menu-items/${Date.now()}-${file.name}`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      if (isEdit) {
-        setEditItem(prev => ({ ...prev, imageUrl: url }));
-      } else {
-        setNewItem(prev => ({ ...prev, imageUrl: url }));
-      }
+      await setDoc(doc(db, "settings", "bakery"), { 
+        cakeOfTheDay: val,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+      setJustSavedCake(true);
+      setTimeout(() => setJustSavedCake(false), 2000);
     } catch (err) {
-      console.error("Upload error:", err);
-      alert("Upload fehlgeschlagen. Bitte prüfe die Berechtigungen.");
-    } finally {
-      setIsUploading(false);
+      handleFirestoreError(err, OperationType.WRITE, path);
     }
   };
 
@@ -220,6 +282,10 @@ export default function Admin() {
 
   return (
     <div className="max-w-4xl mx-auto py-32 px-6">
+      <Helmet>
+        <title>Bakery Admin | Einstellungen</title>
+        <meta name="description" content="Verwalte die Backstube und aktualisiere den Cake of the Day." />
+      </Helmet>
       <div className="mb-20 border-b border-white/10 pb-8">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tighter serif italic text-center md:text-left break-words">BACKSTUBE <span className="text-amber-500">DASHBOARD</span></h1>
       </div>
@@ -240,9 +306,18 @@ export default function Admin() {
           </div>
           <button 
             onClick={() => handleUpdateCakeOfDay(settings.cakeOfTheDay)}
-            className="bg-white text-black px-10 py-4 font-black uppercase tracking-widest hover:bg-amber-500 transition-all w-full md:w-auto"
+            className={`bg-white text-black px-10 py-4 font-black uppercase tracking-widest transition-all w-full md:w-auto flex items-center justify-center gap-2 ${
+              justSavedCake ? "bg-amber-500" : "hover:bg-amber-500"
+            }`}
           >
-            Sichern
+            {justSavedCake ? (
+              <>
+                <Check size={20} />
+                <span>Gespeichert</span>
+              </>
+            ) : (
+              "Sichern"
+            )}
           </button>
         </div>
       </section>
@@ -292,38 +367,22 @@ export default function Admin() {
                 <option value="Anderes" className="bg-[#0a0a0a]">Anderes</option>
               </select>
             </div>
-            <div className="lg:col-span-2 flex flex-col gap-2">
-              <label className="text-[10px] uppercase tracking-widest font-bold text-white/40">Bild URL oder Upload</label>
-              <div className="flex gap-4 items-center">
-                <input 
-                  type="text" 
-                  value={newItem.imageUrl || ""}
-                  onChange={e => setNewItem({...newItem, imageUrl: e.target.value})}
-                  className="flex-1 bg-transparent border-b border-white/20 p-2 font-bold outline-none focus:border-amber-500 transition-all text-sm text-white/60"
-                  placeholder="https://... oder Datei wählen"
-                />
-                <label className="cursor-pointer bg-white/10 p-2 hover:bg-white/20 transition-colors">
-                  <Upload size={16} className={isUploading ? "animate-bounce" : ""} />
-                  <input 
-                    type="file" 
-                    className="hidden" 
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleFileUpload(file);
-                    }}
-                    disabled={isUploading}
-                  />
-                </label>
-              </div>
-            </div>
             <div className="flex items-end">
               <button 
                 onClick={handleAddItem}
-                disabled={isUploading || !newItem.name}
-                className="w-full bg-white text-black py-4 font-black uppercase tracking-widest hover:bg-amber-500 transition-all shadow-xl disabled:opacity-50"
+                disabled={!newItem.name}
+                className={`w-full py-4 font-black uppercase tracking-widest transition-all shadow-xl disabled:opacity-50 flex items-center justify-center gap-2 ${
+                  justAddedItem ? "bg-amber-500 text-black" : "bg-white text-black hover:bg-amber-500"
+                }`}
               >
-                {isUploading ? "Wird hochgeladen..." : "Hinzufügen"}
+                {justAddedItem ? (
+                  <>
+                    <Check size={20} />
+                    <span>Hinzugefügt</span>
+                  </>
+                ) : (
+                  "Hinzufügen"
+                )}
               </button>
             </div>
           </div>
@@ -353,34 +412,10 @@ export default function Admin() {
                       className="bg-white/5 border-b border-amber-500 p-2 font-bold uppercase outline-none text-white serif italic"
                     />
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[9px] uppercase tracking-widest font-bold text-white/30">Bild URL / Upload</label>
-                    <div className="flex gap-2 items-center">
-                      <input 
-                        type="text" 
-                        value={editItem.imageUrl || ""}
-                        onChange={e => setEditItem({...editItem, imageUrl: e.target.value})}
-                        className="flex-1 bg-white/5 border-b border-amber-500 p-2 text-xs outline-none text-white/60"
-                      />
-                      <label className="cursor-pointer bg-white/5 p-1 hover:bg-white/10 transition-colors border border-white/10">
-                        <Upload size={12} />
-                        <input 
-                          type="file" 
-                          className="hidden" 
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleFileUpload(file, true);
-                          }}
-                        />
-                      </label>
-                    </div>
-                  </div>
                   <div className="flex gap-2">
                     <button 
                       onClick={saveEdit} 
-                      disabled={isUploading}
-                      className="flex-1 bg-amber-500 text-black p-2 rounded flex justify-center items-center disabled:opacity-50"
+                      className="flex-1 bg-amber-500 text-black p-2 rounded flex justify-center items-center"
                     >
                       <Check size={18} />
                     </button>
@@ -390,11 +425,6 @@ export default function Admin() {
               ) : (
                 <>
                   <div className="flex gap-8 items-center">
-                    {item.imageUrl && (
-                      <div className="w-16 h-16 border border-white/10 overflow-hidden grayscale group-hover:grayscale-0 transition-all">
-                        <img src={item.imageUrl} className="w-full h-full object-cover" />
-                      </div>
-                    )}
                   <div className="flex flex-col gap-1">
                     <span className="text-[9px] uppercase tracking-widest font-black text-amber-500/60 font-sans">{item.category}</span>
                     <div className="flex flex-col sm:flex-row sm:gap-4 sm:items-center">
@@ -404,19 +434,48 @@ export default function Admin() {
                     </div>
                   </div>
                   </div>
-                  <div className="flex gap-4 mt-6 md:mt-0">
-                    <button 
-                      onClick={() => startEditing(item)}
-                      className="text-white/40 hover:text-white transition-colors p-2"
-                    >
-                      <Edit3 size={18} />
-                    </button>
-                    <button 
-                      onClick={() => handleDeleteItem(item.id)}
-                      className="text-white/10 hover:text-red-500 transition-colors p-2"
-                    >
-                      <Trash size={18} />
-                    </button>
+                  <div className="flex gap-4 mt-6 md:mt-0 relative z-20">
+                    {itemToDelete === item.id ? (
+                      <div className="flex items-center gap-2 bg-red-500/10 p-1 rounded-lg border border-red-500/20">
+                        <span className="text-[10px] uppercase font-bold text-red-500 px-2 italic">Sicher?</span>
+                        <button 
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleDeleteItem(item.id); }}
+                          className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition-colors"
+                        >
+                          <Trash size={16} />
+                        </button>
+                        <button 
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); setItemToDelete(null); }}
+                          className="bg-white/10 text-white p-2 rounded-md hover:bg-white/20 transition-colors"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <button 
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); startEditing(item); }}
+                          className="text-white/40 hover:text-white transition-colors p-2"
+                        >
+                          <Edit3 size={18} />
+                        </button>
+                        <button 
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            console.log("Delete button clicked for ID:", item.id);
+                            setItemToDelete(item.id);
+                          }}
+                          className="text-white/20 hover:text-red-500 transition-colors p-3 bg-white/5 hover:bg-red-500/10 rounded-full"
+                          title="Löschen"
+                        >
+                          <Trash size={20} />
+                        </button>
+                      </>
+                    )}
                   </div>
                 </>
               )}

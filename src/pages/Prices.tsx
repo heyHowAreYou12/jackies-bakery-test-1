@@ -4,6 +4,7 @@ import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { MenuItem } from "../types";
 import { motion } from "motion/react";
+import { Helmet } from "react-helmet-async";
 
 export default function Prices() {
   const [items, setItems] = useState<MenuItem[]>([]);
@@ -26,6 +27,10 @@ export default function Prices() {
 
   return (
     <div className="max-w-5xl mx-auto py-24 md:py-32 px-6 md:px-10">
+      <Helmet>
+        <title>Preise & Sortiment | The Price of Passion</title>
+        <meta name="description" content="Entdecke das Sortiment von Jacky's Bakery. Ehrliches Handwerk, faire Preise und individuelle Backwerke für dein Event." />
+      </Helmet>
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -59,11 +64,6 @@ export default function Prices() {
               <ul className="space-y-12">
                 {items.filter(item => item.category === category).map(item => (
                   <li key={item.id} className="group flex flex-col md:flex-row md:items-center gap-6 border-b border-white/5 pb-8 transition-all hover:border-amber-500/30">
-                    {item.imageUrl && (
-                      <div className="w-full md:w-32 aspect-square overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
-                        <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
-                      </div>
-                    )}
                       <div className="flex-1 flex justify-between items-baseline gap-4">
                         <span className="text-2xl md:text-3xl font-black uppercase tracking-tighter group-hover:text-amber-500 transition-colors italic break-words">
                           {item.name}
@@ -83,12 +83,22 @@ export default function Prices() {
 
       <div className="mt-32 p-6 sm:p-12 bg-white text-black text-center md:skew-x-[-2deg]">
         <h3 className="text-2xl sm:text-4xl font-black uppercase mb-4 tracking-tighter break-words leading-none">Sonderwünsche?</h3>
-        <p className="text-sm sm:text-lg font-bold uppercase tracking-widest mb-8 opacity-90">
+        <p className="text-sm sm:text-lg font-bold uppercase tracking-widest mb-10 opacity-90">
           Ich backe auch individuell für deine Events, Partys oder einfach nur für dich.
         </p>
-        <div className="text-base sm:text-xl font-black tabular-nums">
-          <span className="block sm:inline opacity-70 font-bold text-xs uppercase tracking-widest mb-2 sm:mb-0 sm:mr-4">Frag einfach nach:</span>
-          +43 676 123456
+        <div className="flex flex-col sm:flex-row justify-center items-center md:items-start gap-8 sm:gap-12">
+          <div className="text-base sm:text-xl font-black tabular-nums">
+            <span className="block opacity-70 font-bold text-xs uppercase tracking-widest mb-2">Telefon:</span>
+            <a href="tel:+43676123456" className="hover:text-amber-600 transition-colors">
+              +43 676 123456
+            </a>
+          </div>
+          <div className="text-base sm:text-xl font-black tabular-nums">
+            <span className="block opacity-70 font-bold text-xs uppercase tracking-widest mb-2">Email:</span>
+            <a href="mailto:beispiel@gmail.com" target="_blank" rel="noopener noreferrer" className="hover:text-amber-600 transition-colors">
+              beispiel@gmail.com
+            </a>
+          </div>
         </div>
       </div>
     </div>

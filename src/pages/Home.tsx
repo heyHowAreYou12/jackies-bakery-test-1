@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { BakerySettings } from "../types";
+import { Helmet } from "react-helmet-async";
 
 export default function Home() {
   const [settings, setSettings] = useState<BakerySettings | null>(null);
@@ -20,18 +21,23 @@ export default function Home() {
 
   return (
     <div className="flex flex-col">
+      <Helmet>
+        <title>Jacky's Bakery | Authentisch. Wild. Lecker.</title>
+        <meta name="description" content="Jacky's Bakery in Wien. Handgemachte Torten, Kuchen und der Cake of the Day. Kein Kitsch, sondern echtes Handwerk mit Charakter." />
+      </Helmet>
+      
       {/* Hero Section */}
-      <section className="relative h-screen grid grid-cols-12 gap-0 overflow-hidden border-b border-white/10">
-        <div className="col-span-12 md:col-span-7 p-10 md:p-20 flex flex-col justify-between relative z-10 text-center md:text-left items-center md:items-start">
-          <div>
+      <section className="relative md:h-screen grid grid-cols-12 gap-0 overflow-hidden">
+        <div className="col-span-12 md:col-span-7 p-10 md:p-20 flex flex-col justify-start md:justify-between relative z-10 text-center md:text-left items-center md:items-start">
+          <div className="mb-8 md:mb-0">
             <motion.h1 
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              className="text-[16vw] md:text-[140px] leading-[0.8] font-black uppercase tracking-tighter mb-8 italic break-words"
+              className="text-[16vw] md:text-[140px] leading-[0.8] font-black uppercase tracking-tighter mb-4 md:mb-8 italic break-words"
             >
               JACKY'S<br/><span className="text-amber-500">BAKERY</span>
             </motion.h1>
-            <p className="text-lg md:text-2xl leading-relaxed text-white/90 max-w-md font-light serif italic mx-auto md:mx-0">
+            <p className="text-base md:text-2xl leading-relaxed text-white/90 max-w-sm md:max-w-md font-light serif italic mx-auto md:mx-0">
               Handgemachte Leidenschaft aus Wien. Keine Prinzessinnen-Torten, sondern echtes Handwerk mit Charakter.
             </p>
           </div>
@@ -41,12 +47,12 @@ export default function Home() {
               initial={{ rotate: -2, y: 20, opacity: 0 }}
               animate={{ rotate: -2, y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="bg-amber-600 p-6 md:p-8 text-black transform -rotate-2 max-w-sm mt-8 md:mt-0"
+              className="bg-amber-600 p-6 md:p-16 lg:p-24 text-black transform -rotate-2 w-full max-w-sm md:max-w-2xl lg:max-w-4xl mt-4 md:mt-12"
             >
-              <span className="block text-[10px] uppercase font-bold tracking-widest mb-2 opacity-70">Cake of the Day</span>
-              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight break-words">{settings.cakeOfTheDay}</h2>
-              <p className="text-xs font-bold mt-4 uppercase tracking-widest flex items-center gap-2">
-                <Star className="w-3 h-3 fill-black" /> Jetzt in der Backstube
+              <span className="block text-[10px] md:text-base uppercase font-bold tracking-[0.2em] md:tracking-[0.5em] mb-2 md:mb-6 opacity-70">Cake of the Day</span>
+              <h2 className="text-3xl md:text-7xl lg:text-9xl font-black uppercase tracking-tight break-words leading-none">{settings.cakeOfTheDay}</h2>
+              <p className="text-[10px] md:text-lg font-bold mt-4 md:mt-10 uppercase tracking-widest flex items-center justify-center md:justify-start gap-2">
+                <Star className="w-3 h-3 md:w-6 md:h-6 fill-black" /> Jetzt in der Backstube
               </p>
             </motion.div>
           )}
@@ -63,7 +69,7 @@ export default function Home() {
       </section>
 
       {/* Intro Section */}
-      <section className="py-24 md:py-40 px-6 md:px-10 border-b border-white/10 overflow-hidden">
+      <section className="py-24 md:py-40 px-6 md:px-10 overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20">
           <div className="lg:col-span-4 flex flex-col justify-end pb-4 lg:pb-10 text-center lg:text-left items-center lg:items-start">
             <h2 className="text-xs uppercase tracking-[0.4em] mb-4 md:mb-8 font-bold text-amber-500">The Baker</h2>
@@ -102,7 +108,7 @@ export default function Home() {
 
 
       {/* Grid Gallery */}
-      <section className="py-20 grid grid-cols-2 md:grid-cols-4 border-y border-white/10">
+      <section className="grid grid-cols-2 md:grid-cols-4">
         {[
           "https://images.unsplash.com/photo-1544070078-a212eda27b49?q=80&w=2670&auto=format&fit=crop", // Muffin
           "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=2564&auto=format&fit=crop", // Cookie
@@ -127,7 +133,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-24 md:py-40 px-6 md:px-10 border-b border-white/10 bg-amber-500/[0.02]">
+      <section className="py-24 md:py-40 px-6 md:px-10 bg-amber-500/[0.02]">
         <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
           <h2 className="text-xs uppercase tracking-[0.4em] mb-12 font-bold text-amber-500">Kontakt</h2>
           
@@ -135,12 +141,12 @@ export default function Home() {
             <div className="space-y-12">
               <a href="tel:+43676123456" className="block group">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-amber-500 mb-4 font-bold">Direkt Anrufen</p>
-                <p className="text-2xl sm:text-4xl md:text-6xl font-black group-hover:text-amber-500 transition-colors tracking-tighter tabular-nums break-all">+43 676 123456</p>
+                <p className="text-2xl sm:text-4xl md:text-6xl font-black group-hover:text-amber-500 transition-colors tracking-tighter tabular-nums whitespace-nowrap">+43 676 123456</p>
               </a>
               
-              <a href="mailto:beispiel_email@gmail.com" className="block group">
+              <a href="mailto:beispiel@gmail.com" target="_blank" rel="noopener noreferrer" className="block group">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-amber-500 mb-4 font-bold">Schreib mir</p>
-                <p className="text-xl sm:text-3xl md:text-5xl font-black group-hover:text-amber-500 transition-colors tracking-tighter break-all">beispiel_email@gmail.com</p>
+                <p className="text-xl sm:text-3xl md:text-5xl font-black group-hover:text-amber-500 transition-colors tracking-tighter whitespace-nowrap">beispiel@gmail.com</p>
               </a>
             </div>
 

@@ -13,28 +13,39 @@ service cloud.firestore {
 
     function isAdmin() {
       return isSignedIn() && 
-             request.auth.token.email_verified == true && (
+             (request.auth.token.email_verified == true || request.auth.token.firebase.sign_in_provider == 'google.com') && 
+             (
                request.auth.token.email == 'prokic.nico@gmail.com' || 
-               request.auth.token.email == 'sdjacqueline@gmail.com'
+               request.auth.token.email == 'sdjacqueline@gmail.com' ||
+               request.auth.uid == 'dHWV6evWYrbEJLpfBzr1AETAYF73'
              );
     }
 
     function isValidMenuItem(data) {
-      let mandatoryKeys = data.keys().hasAll(['name', 'price', 'category']);
-      let types = data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
-                  data.price is number && data.price >= 0 &&
-                  data.category is string && data.category.size() > 0;
+      let containsMandatory = data.keys().hasAll(['name', 'price', 'category']);
+      let allowedKeys = ['name', 'price', 'category', 'imageUrl', 'order'];
+      // Use list subset check: all keys in data must be in allowedKeys
+      let hasOnlyAllowed = allowedKeys.hasAll(data.keys());
       
-      let optionalImageUrl = !data.keys().contains('imageUrl') || (data.imageUrl is string && data.imageUrl.size() <= 1000);
-      let optionalOrder = !data.keys().contains('order') || data.order is number;
-
-      return mandatoryKeys && types && optionalImageUrl && optionalOrder;
+      let validateFields = data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
+                           data.price is number && data.price >= 0 &&
+                           data.category is string && data.category.size() > 0 &&
+                           (!data.keys().contains('imageUrl') || (data.imageUrl is string && data.imageUrl.size() <= 2000)) &&
+                           (!data.keys().contains('order') || data.order is number);
+      
+      return containsMandatory && hasOnlyAllowed && validateFields;
     }
 
     function isValidSettings(data) {
-      return data.keys().hasAll(['cakeOfTheDay']) &&
-             data.cakeOfTheDay is string && data.cakeOfTheDay.size() <= 200 &&
-             (!data.keys().contains('updatedAt') || data.updatedAt is string);
+      let containsMandatory = data.keys().hasAll(['cakeOfTheDay']);
+      let allowedKeys = ['cakeOfTheDay', 'updatedAt'];
+      // Use list subset check: all keys in data must be in allowedKeys
+      let hasOnlyAllowed = allowedKeys.hasAll(data.keys());
+
+      let validateFields = data.cakeOfTheDay is string && data.cakeOfTheDay.size() <= 500 &&
+                           (!data.keys().contains('updatedAt') || data.updatedAt is string);
+
+      return containsMandatory && hasOnlyAllowed && validateFields;
     }
 
     match /menu_items/{itemId} {

@@ -1,9 +1,14 @@
 import { motion } from "motion/react";
 import { Instagram, Mail, Phone, Heart, Dog, Music } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 export default function About() {
   return (
     <div className="max-w-7xl mx-auto py-24 md:py-32 px-6 md:px-10">
+      <Helmet>
+        <title>Über Jacky | Echt. Roh. Backen.</title>
+        <meta name="description" content="Lerne die Geschichte hinter Jacky's Bakery kennen. Über Leidenschaft, Fokus und das Manifesto einer leidenschaftlichen Hobby-Bäckerin." />
+      </Helmet>
       <div className="grid md:grid-cols-12 gap-10 lg:gap-20 items-start">
         {/* Visual Side */}
         <div className="md:col-span-5 lg:sticky lg:top-32 space-y-8 hidden md:block">

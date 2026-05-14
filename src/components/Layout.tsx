@@ -16,13 +16,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const footerItems = [
     { name: "Impressum", path: "/impressum" },
     { name: "Datenschutz", path: "/datenschutz" },
-    { name: "Admin", path: "/admin" },
   ];
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 w-full z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/10 uppercase font-bold tracking-[0.2em] text-[10px]">
+      <nav className="fixed top-0 left-0 w-full z-50 bg-[#0a0a0a]/90 backdrop-blur-md uppercase font-bold tracking-[0.2em] text-[10px]">
         <div className="max-w-7xl mx-auto px-10 h-20 flex items-center justify-between">
           <Link to="/" className="text-xs font-black uppercase tracking-[0.3em] text-amber-500 hover:text-white transition-colors">
             Sweet Buns Club <span className="text-white">/</span> Jacky's Bakery
@@ -80,13 +79,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {item.name}
             </Link>
           ))}
-          <Link
-            to="/admin"
-            onClick={() => setIsMenuOpen(false)}
-            className="text-xl font-bold uppercase tracking-widest text-white/70 hover:text-amber-500 transition-colors mt-8"
-          >
-            Admin Login
-          </Link>
           <button 
             onClick={() => setIsMenuOpen(false)}
             className="mt-8 p-4 bg-white text-black font-bold uppercase tracking-widest"
@@ -109,7 +101,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* Footer */}
-      <footer className="mt-40 border-t border-white/10 py-16 px-10">
+      <footer className="py-16 px-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left">
           <div className="max-w-sm flex flex-col items-center md:items-start">
             <h3 className="font-black uppercase text-xs tracking-widest text-amber-500 mb-4">Sweet Buns Club</h3>
@@ -141,8 +133,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </a>
           </div>
         </div>
-        <div className="text-center mt-24 opacity-40 text-[9px] uppercase tracking-[0.4em]">
-          &copy; {new Date().getFullYear()} Jacky's Bakery Vienna. Built for the wild ones.
+        <div className="mt-20 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="opacity-40 text-[9px] uppercase tracking-[0.4em]">
+            &copy; {new Date().getFullYear()} Jacky's Bakery Vienna. Built for the wild ones.
+          </div>
+          <Link 
+            to="/admin" 
+            className="group relative"
+          >
+            <span className="font-signature text-xl text-white/10 select-none">
+              Jacky
+            </span>
+          </Link>
         </div>
       </footer>
     </div>

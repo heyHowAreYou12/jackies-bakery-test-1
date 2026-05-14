@@ -4,6 +4,7 @@
  */
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
 import Home from "./pages/Home";
@@ -15,19 +16,21 @@ import Admin from "./pages/Admin";
 
 export default function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/ueber-mich" element={<About />} />
-          <Route path="/preise" element={<Prices />} />
-          <Route path="/impressum" element={<Imprint />} />
-          <Route path="/datenschutz" element={<Privacy />} />
-          <Route path="/admin" element={<Admin />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <HelmetProvider>
+      <Router>
+        <ScrollToTop />
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/ueber-mich" element={<About />} />
+            <Route path="/preise" element={<Prices />} />
+            <Route path="/impressum" element={<Imprint />} />
+            <Route path="/datenschutz" element={<Privacy />} />
+            <Route path="/admin" element={<Admin />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </HelmetProvider>
   );
 }
 
