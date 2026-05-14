@@ -50,10 +50,10 @@ export default function Home() {
               initial={{ rotate: -2, y: 20, opacity: 0 }}
               animate={{ rotate: -2, y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="bg-amber-600 p-6 md:p-16 lg:p-24 text-black transform -rotate-2 w-full max-w-sm md:max-w-2xl lg:max-w-4xl mt-4 md:mt-12"
+              className="bg-amber-600 p-6 md:p-16 lg:p-24 text-black transform -rotate-2 w-[90%] md:w-full max-w-md md:max-w-2xl lg:max-w-4xl mt-4 md:mt-12 mx-auto md:mx-0"
             >
               <span className="block text-[10px] md:text-base uppercase font-bold tracking-[0.2em] md:tracking-[0.5em] mb-2 md:mb-6 opacity-70">Cake of the Day</span>
-              <h2 className="text-3xl md:text-7xl lg:text-9xl font-black uppercase tracking-tight break-words leading-none">{settings.cakeOfTheDay}</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-[90px] font-black uppercase tracking-tight break-words leading-[0.9] text-balance [hyphens:auto] whitespace-pre-line">{settings.cakeOfTheDay}</h2>
               <p className="text-[10px] md:text-lg font-bold mt-4 md:mt-10 uppercase tracking-widest flex items-center justify-center md:justify-start gap-2">
                 <Star className="w-3 h-3 md:w-6 md:h-6 fill-black" /> Jetzt in der Backstube
               </p>
