@@ -7,6 +7,42 @@ import { db } from "../lib/firebase";
 import { BakerySettings } from "../types";
 import { Helmet } from "react-helmet-async";
 
+const formatCakeName = (name: string) => {
+  if (!name) return "";
+  const upper = name.toUpperCase();
+  if (upper.includes("ZWETSCHKENGERMKNÖDEL")) {
+    return "ZWETSCHKENGERMKNÖDEL-\nNUSS-NUTELLA STRUDEL";
+  }
+  if (name.length > 20 && name.includes("-")) {
+    const parts = name.split("-");
+    if (parts.length > 1) {
+      const midpoint = Math.floor(parts.length / 2);
+      const firstPart = parts.slice(0, midpoint).join("-");
+      const secondPart = parts.slice(midpoint).join("-");
+      return `${firstPart}-\n${secondPart}`;
+    }
+  }
+  return name;
+};
+
+const getFontSizeClass = (name: string) => {
+  if (!name) return "text-2xl sm:text-3xl md:text-[90px] leading-[0.95]";
+  const formatted = formatCakeName(name);
+  const lines = formatted.split("\n");
+  const longestLineLen = Math.max(...lines.map(l => l.length));
+
+  if (longestLineLen > 25) {
+    return "text-lg sm:text-xl md:text-[40px] leading-[1.05]";
+  } else if (longestLineLen > 18) {
+    return "text-xl sm:text-2xl md:text-[50px] leading-[1.0]";
+  } else if (longestLineLen > 13) {
+    return "text-2xl sm:text-3xl md:text-[65px] leading-[0.95]";
+  } else if (longestLineLen > 10) {
+    return "text-3xl sm:text-4xl md:text-[80px] leading-[0.9]";
+  }
+  return "text-4xl sm:text-5xl md:text-[90px] leading-[0.9]";
+};
+
 export default function Home() {
   const [settings, setSettings] = useState<BakerySettings | null>(null);
 
@@ -45,20 +81,25 @@ export default function Home() {
             </p>
           </div>
 
-          {settings?.cakeOfTheDay && (
-            <motion.div 
-              initial={{ rotate: -2, y: 20, opacity: 0 }}
-              animate={{ rotate: -2, y: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="bg-amber-600 p-6 md:p-16 lg:p-24 text-black transform -rotate-2 w-[90%] md:w-full max-w-md md:max-w-2xl lg:max-w-4xl mt-4 md:mt-12 mx-auto md:mx-0"
-            >
-              <span className="block text-[10px] md:text-base uppercase font-bold tracking-[0.2em] md:tracking-[0.5em] mb-2 md:mb-6 opacity-70">Cake of the Day</span>
-              <h2 className="text-2xl sm:text-3xl md:text-[90px] font-black uppercase tracking-tight break-words leading-[0.9] text-balance [hyphens:auto] whitespace-pre-line">{settings.cakeOfTheDay}</h2>
-              <p className="text-[10px] md:text-lg font-bold mt-4 md:mt-10 uppercase tracking-widest flex items-center justify-center md:justify-start gap-2">
-                <Star className="w-3 h-3 md:w-6 md:h-6 fill-black" /> Jetzt in der Backstube
-              </p>
-            </motion.div>
-          )}
+          {(() => {
+            const cakeName = settings?.cakeOfTheDay || "ZWETSCHKENGERMKNÖDEL-NUSS-NUTELLA STRUDEL";
+            return (
+              <motion.div 
+                initial={{ rotate: -2, y: 20, opacity: 0 }}
+                animate={{ rotate: -2, y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="bg-amber-600 p-8 sm:p-12 md:p-16 lg:p-20 text-black transform -rotate-2 w-[95%] sm:w-[90%] md:w-full max-w-md md:max-w-2xl lg:max-w-4xl mt-4 md:mt-12 mx-auto md:mx-0 flex flex-col justify-center text-center md:text-left min-h-[220px] md:min-h-[300px] shadow-2xl relative"
+              >
+                <span className="block text-[10px] md:text-base uppercase font-bold tracking-[0.2em] md:tracking-[0.5em] mb-4 md:mb-6 opacity-70">Cake of the Day</span>
+                <h2 className={`font-black uppercase tracking-tight whitespace-pre-line text-balance [hyphens:none] overflow-hidden ${getFontSizeClass(cakeName)}`}>
+                  {formatCakeName(cakeName)}
+                </h2>
+                <p className="text-[10px] md:text-lg font-bold mt-4 md:mt-8 uppercase tracking-widest flex items-center justify-center md:justify-start gap-2 opacity-90">
+                  <Star className="w-3 h-3 md:w-6 md:h-6 fill-black shrink-0 animate-pulse" /> Jetzt in der Backstube
+                </p>
+              </motion.div>
+            );
+          })()}
         </div>
 
         <div className="hidden md:block md:col-span-5 relative border-l border-white/10">

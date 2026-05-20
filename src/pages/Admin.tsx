@@ -43,6 +43,7 @@ export default function Admin() {
   const [justSavedCake, setJustSavedCake] = useState(false);
   const [justAddedItem, setJustAddedItem] = useState(false);
   const [newItem, setNewItem] = useState<Partial<MenuItem>>({ name: "", price: 0, category: "Kuchen" });
+  const [priceError, setPriceError] = useState<string | null>(null);
 
   const handleFirestoreError = (error: unknown, operationType: OperationType, path: string | null) => {
     const errInfo: FirestoreErrorInfo = {
@@ -136,14 +137,22 @@ export default function Admin() {
   }, [user]);
 
   const handleAddItem = async () => {
-    if (!newItem.name || !newItem.price || !newItem.category) return;
+    setPriceError(null);
+    if (!newItem.name || newItem.name.trim() === "") {
+      setPriceError("Bitte gib einen Namen für das Produkt an.");
+      return;
+    }
+    if (newItem.price === undefined || newItem.price === null || newItem.price <= 0) {
+      setPriceError("Bitte gib einen gültigen Preis größer als 0 € an.");
+      return;
+    }
     const path = "menu_items";
     try {
       console.log("Admin: Adding item", newItem);
       await addDoc(collection(db, path), {
-        name: newItem.name,
+        name: newItem.name.trim(),
         price: newItem.price,
-        category: newItem.category,
+        category: newItem.category || "Kuchen",
         order: items.length
       });
       console.log("Admin: Item added successfully (doc created)");
@@ -335,7 +344,7 @@ export default function Admin() {
         {/* Add New Item */}
         <div className="bg-white/5 p-10 border border-white/10 mb-20">
           <p className="text-[10px] uppercase tracking-[0.3em] font-black text-white/20 mb-8 border-b border-white/10 pb-4">Neues Produkt hinzufügen</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-6">
             <div className="flex flex-col gap-2">
               <label className="text-[10px] uppercase tracking-widest font-bold text-white/40">Name</label>
               <input 
@@ -371,8 +380,7 @@ export default function Admin() {
             <div className="flex items-end">
               <button 
                 onClick={handleAddItem}
-                disabled={!newItem.name}
-                className={`w-full py-4 font-black uppercase tracking-widest transition-all shadow-xl disabled:opacity-50 flex items-center justify-center gap-2 ${
+                className={`w-full py-4 font-black uppercase tracking-widest transition-all shadow-xl flex items-center justify-center gap-2 ${
                   justAddedItem ? "bg-amber-500 text-black" : "bg-white text-black hover:bg-amber-500"
                 }`}
               >
@@ -384,10 +392,19 @@ export default function Admin() {
                 ) : (
                   "Hinzufügen"
                 )}
-              </button>
-            </div>
-          </div>
-        </div>
+               </button>
+             </div>
+           </div>
+          {priceError && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-red-500 font-bold uppercase text-xs tracking-widest bg-red-500/10 px-4 py-3 border border-red-500/20 text-center"
+            >
+              {priceError}
+            </motion.div>
+          )}
+         </div>
 
         {/* List of Items */}
         <div className="space-y-6">
