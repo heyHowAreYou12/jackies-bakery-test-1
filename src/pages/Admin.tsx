@@ -43,6 +43,7 @@ export default function Admin() {
   const [justSavedCake, setJustSavedCake] = useState(false);
   const [justAddedItem, setJustAddedItem] = useState(false);
   const [newItem, setNewItem] = useState<Partial<MenuItem>>({ name: "", price: 0, category: "Kuchen" });
+  const [priceInput, setPriceInput] = useState<string>("0");
   const [priceError, setPriceError] = useState<string | null>(null);
 
   const handleFirestoreError = (error: unknown, operationType: OperationType, path: string | null) => {
@@ -142,16 +143,25 @@ export default function Admin() {
       setPriceError("Bitte gib einen Namen für das Produkt an.");
       return;
     }
-    if (newItem.price === undefined || newItem.price === null || newItem.price <= 0) {
+    
+    const normalizedPrice = priceInput.trim().replace(",", ".");
+    if (normalizedPrice === "") {
+      setPriceError("Bitte gib einen Preis an.");
+      return;
+    }
+    
+    const parsedPrice = parseFloat(normalizedPrice);
+    if (isNaN(parsedPrice) || parsedPrice <= 0) {
       setPriceError("Bitte gib einen gültigen Preis größer als 0 € an.");
       return;
     }
+
     const path = "menu_items";
     try {
-      console.log("Admin: Adding item", newItem);
+      console.log("Admin: Adding item", newItem, parsedPrice);
       await addDoc(collection(db, path), {
         name: newItem.name.trim(),
-        price: newItem.price,
+        price: parsedPrice,
         category: newItem.category || "Kuchen",
         order: items.length
       });
@@ -159,6 +169,7 @@ export default function Admin() {
       setJustAddedItem(true);
       setTimeout(() => setJustAddedItem(false), 2000);
       setNewItem({ name: "", price: 0, category: "Kuchen" });
+      setPriceInput("0");
     } catch (err) {
       handleFirestoreError(err, OperationType.CREATE, path);
     }
@@ -166,27 +177,44 @@ export default function Admin() {
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editItem, setEditItem] = useState<Partial<MenuItem>>({});
+  const [editPriceInput, setEditPriceInput] = useState<string>("");
 
   const startEditing = (item: MenuItem) => {
     setEditingId(item.id);
     setEditItem(item);
+    setEditPriceInput(item.price !== undefined && item.price !== null ? item.price.toString().replace(".", ",") : "0");
   };
 
   const cancelEditing = () => {
     setEditingId(null);
     setEditItem({});
+    setEditPriceInput("");
   };
 
   const saveEdit = async () => {
-    if (!editingId || !editItem.name) return;
+    if (!editingId || !editItem.name || editItem.name.trim() === "") {
+      alert("Bitte gib einen Namen ein.");
+      return;
+    }
+    const normalizedPrice = editPriceInput.trim().replace(",", ".");
+    if (normalizedPrice === "") {
+      alert("Bitte gib einen Preis an.");
+      return;
+    }
+    const parsedPrice = parseFloat(normalizedPrice);
+    if (isNaN(parsedPrice) || parsedPrice <= 0) {
+      alert("Bitte gib einen gültigen Preis größer als 0 € an.");
+      return;
+    }
     const path = `menu_items/${editingId}`;
     try {
       await updateDoc(doc(db, "menu_items", editingId), {
-        name: editItem.name,
-        price: editItem.price,
+        name: editItem.name.trim(),
+        price: parsedPrice,
         category: editItem.category
       });
       setEditingId(null);
+      setEditPriceInput("");
     } catch (err) {
       handleFirestoreError(err, OperationType.UPDATE, path);
     }
@@ -357,9 +385,15 @@ export default function Admin() {
             <div className="flex flex-col gap-2">
               <label className="text-[10px] uppercase tracking-widest font-bold text-white/40">Preis (€)</label>
               <input 
-                type="number" 
-                value={newItem.price || ""}
-                onChange={e => setNewItem({...newItem, price: parseFloat(e.target.value) || 0})}
+                type="text" 
+                value={priceInput}
+                onChange={e => {
+                  const val = e.target.value;
+                  if (val === "" || /^[0-9]*[.,]?[0-9]{0,2}$/.test(val)) {
+                    setPriceInput(val);
+                  }
+                }}
+                placeholder="0,00"
                 className="bg-transparent border-b border-white/20 p-2 font-bold uppercase outline-none focus:border-amber-500 transition-all serif italic text-xl text-white"
               />
             </div>
@@ -424,9 +458,14 @@ export default function Admin() {
                   <div className="flex flex-col gap-1">
                     <label className="text-[9px] uppercase tracking-widest font-bold text-white/30">Preis</label>
                     <input 
-                      type="number" 
-                      value={editItem.price || ""}
-                      onChange={e => setEditItem({...editItem, price: parseFloat(e.target.value) || 0})}
+                      type="text" 
+                      value={editPriceInput}
+                      onChange={e => {
+                        const val = e.target.value;
+                        if (val === "" || /^[0-9]*[.,]?[0-9]{0,2}$/.test(val)) {
+                          setEditPriceInput(val);
+                        }
+                      }}
                       className="bg-white/5 border-b border-amber-500 p-2 font-bold uppercase outline-none text-white serif italic"
                     />
                   </div>
