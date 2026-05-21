@@ -44,7 +44,9 @@ export default function Admin() {
   const [justAddedItem, setJustAddedItem] = useState(false);
   const [newItem, setNewItem] = useState<Partial<MenuItem>>({ name: "", price: 0, category: "Kuchen" });
   const [priceInput, setPriceInput] = useState<string>("0");
+  const [cakePriceInput, setCakePriceInput] = useState<string>("0");
   const [priceError, setPriceError] = useState<string | null>(null);
+  const [cakePriceError, setCakePriceError] = useState<string | null>(null);
 
   const handleFirestoreError = (error: unknown, operationType: OperationType, path: string | null) => {
     const errInfo: FirestoreErrorInfo = {
@@ -126,7 +128,15 @@ export default function Admin() {
     });
 
     const unsubSettings = onSnapshot(doc(db, "settings", "bakery"), (d) => {
-      if (d.exists()) setSettings(d.data() as BakerySettings);
+      if (d.exists()) {
+        const data = d.data() as BakerySettings;
+        setSettings(data);
+        if (data.cakeOfTheDayPrice !== undefined && data.cakeOfTheDayPrice !== null) {
+          setCakePriceInput(data.cakeOfTheDayPrice.toString().replace(".", ","));
+        } else {
+          setCakePriceInput("0");
+        }
+      }
     }, (err) => {
       handleFirestoreError(err, OperationType.GET, "settings/bakery");
     });
@@ -242,10 +252,26 @@ export default function Admin() {
   };
 
   const handleUpdateCakeOfDay = async (val: string) => {
+    setCakePriceError(null);
+    if (!val || val.trim() === "") {
+      setCakePriceError("Bitte gib einen Namen für den Kuchen des Tages an.");
+      return;
+    }
+    const normalizedPrice = cakePriceInput.trim().replace(",", ".");
+    if (normalizedPrice === "") {
+      setCakePriceError("Bitte gib einen Preis für den Kuchen des Tages an.");
+      return;
+    }
+    const parsedPrice = parseFloat(normalizedPrice);
+    if (isNaN(parsedPrice) || parsedPrice <= 0) {
+      setCakePriceError("Bitte gib einen gültigen Preis größer als 0 € an (z. B. 0,10 €).");
+      return;
+    }
     const path = "settings/bakery";
     try {
       await setDoc(doc(db, "settings", "bakery"), { 
-        cakeOfTheDay: val,
+        cakeOfTheDay: val.trim(),
+        cakeOfTheDayPrice: parsedPrice,
         updatedAt: new Date().toISOString()
       }, { merge: true });
       setJustSavedCake(true);
@@ -331,32 +357,61 @@ export default function Admin() {
       {/* Cake of the day */}
       <section className="mb-24">
         <h2 className="text-xs uppercase tracking-[0.4em] mb-6 font-bold text-amber-500">Highlight / Kuchen des Tages</h2>
-        <div className="bg-white/5 p-8 border border-white/10 flex flex-col md:flex-row gap-6 items-end">
-          <div className="flex-1 w-full">
-            <label className="text-[10px] uppercase tracking-widest font-bold text-white/40 mb-2 block">Aktueller Favorit</label>
-            <input 
-              type="text" 
-              value={settings.cakeOfTheDay || ""}
-              onChange={(e) => setSettings({ ...settings, cakeOfTheDay: e.target.value })}
-              className="w-full bg-black border-b border-white/20 p-4 font-bold text-2xl uppercase focus:border-amber-500 outline-none transition-colors serif italic"
-              placeholder="Name des Kuchens..."
-            />
+        <div className="bg-white/5 p-8 border border-white/10 flex flex-col gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 w-full items-end">
+            <div className="md:col-span-3 w-full">
+              <label className="text-[10px] uppercase tracking-widest font-bold text-white/40 mb-2 block">Aktueller Favorit</label>
+              <input 
+                type="text" 
+                value={settings.cakeOfTheDay || ""}
+                onChange={(e) => setSettings({ ...settings, cakeOfTheDay: e.target.value })}
+                className="w-full bg-black border-b border-white/20 p-4 font-bold text-2xl uppercase focus:border-amber-500 outline-none transition-colors serif italic text-white"
+                placeholder="Name des Kuchens..."
+              />
+            </div>
+            <div className="w-full">
+              <label className="text-[10px] uppercase tracking-widest font-bold text-white/40 mb-2 block">Preis (€)</label>
+              <input 
+                type="text" 
+                value={cakePriceInput}
+                onChange={e => {
+                  const val = e.target.value;
+                  if (val === "" || /^[0-9]*[.,]?[0-9]{0,2}$/.test(val)) {
+                    setCakePriceInput(val);
+                  }
+                }}
+                className="w-full bg-black border-b border-white/20 p-4 font-bold text-2xl uppercase focus:border-amber-500 outline-none transition-colors serif italic text-white"
+                placeholder="0,00"
+              />
+            </div>
           </div>
-          <button 
-            onClick={() => handleUpdateCakeOfDay(settings.cakeOfTheDay)}
-            className={`bg-white text-black px-10 py-4 font-black uppercase tracking-widest transition-all w-full md:w-auto flex items-center justify-center gap-2 ${
-              justSavedCake ? "bg-amber-500" : "hover:bg-amber-500"
-            }`}
-          >
-            {justSavedCake ? (
-              <>
-                <Check size={20} />
-                <span>Gespeichert</span>
-              </>
-            ) : (
-              "Sichern"
-            )}
-          </button>
+          {cakePriceError && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-red-500 font-bold uppercase text-xs tracking-widest bg-red-500/10 px-4 py-3 border border-red-500/20 text-center"
+            >
+              {cakePriceError}
+            </motion.div>
+          )}
+
+          <div className="flex justify-end w-full">
+            <button 
+              onClick={() => handleUpdateCakeOfDay(settings.cakeOfTheDay)}
+              className={`bg-white text-black px-10 py-4 font-black uppercase tracking-widest transition-all w-full md:w-auto flex items-center justify-center gap-2 ${
+                justSavedCake ? "bg-amber-500" : "hover:bg-amber-500"
+              }`}
+            >
+              {justSavedCake ? (
+                <>
+                  <Check size={20} />
+                  <span>Gespeichert</span>
+                </>
+              ) : (
+                "Sichern"
+              )}
+            </button>
+          </div>
         </div>
       </section>
 

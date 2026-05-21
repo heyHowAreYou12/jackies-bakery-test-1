@@ -9,5 +9,6 @@ export interface MenuItem {
 
 export interface BakerySettings {
   cakeOfTheDay: string;
+  cakeOfTheDayPrice?: number;
   updatedAt?: any;
 }
